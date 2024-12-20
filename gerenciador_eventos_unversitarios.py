@@ -2,34 +2,43 @@
 eventos = [{'nome_evento': 'Evento', 
     'descricao': 'Teste testado testando testamento', 
     'data': '20/12/2024',
-    'quantidade_maxima_participantes': 100, 
-    'inscritos': 30,
-    'vagas_diponiveis': 70,
+    'quantidade_maxima_participantes': 50, 
+    'inscritos': 49,
+    'vagas_diponiveis': 1,
     'lista_inscritos': ['Amanda Ribeiro Silva', 'Lucas Almeida Costa', 'Mariana Oliveira Souza', 'Gabriel Santos Lima', 'Sofia Pereira Carvalho', 'Rafael Gonçalves Machado', 'Isabela Araújo Fernandes', 'Matheus Martins Rocha', 'Giovanna Mendes Santos', 'João Victor Oliveira Nascimento','Larissa Ferreira Andrade', 'Thiago Costa Ribeiro', 'Ana Clara Figueiredo Lopes', 'Pedro Henrique Alves Fonseca', 'Camila Rocha Menezes', 'Felipe Almeida Cardoso', 'Júlia Martins Albuquerque', 'Guilherme Barbosa Teixeira', 'Beatriz Vieira Monteiro', 'Leonardo Silva Oliveira', 'Carolina Ferreira Matos', 'Vinícius Andrade Cunha', 'Helena Lima Bastos', 'Eduardo Souza Martins', 'Yasmin Castro Moreira', 'Rodrigo Carvalho Santana', 'Bianca Oliveira Campos', 'Diego Monteiro Freitas', 'Manuela Mendes Pires', 'Bruno Rocha Cavalcante']
     }]
 
 MENU_ALUNO = """
 1 - Visualizar Eventos Disponíveis.
 2 - Inscrever-se em Eventos.
-0 - Sair do Sistema
+0 - Acessar Perfis
 """
 MENU_COORDENADOR = """
 1 - Cadastrar Evento. 
 2 - Atualizar Evento.
 3 - Visualizar Inscrições.
 4 - Excluir Evento.
+0 - Acessar Perfis
+"""
+PERFIL_USER = """
+1 - Aluno
+2 - Coordenador
 0 - Sair do Sistema
 """
 
 # Ponto de entrada no sistema
 def main():
     titulo('GERENCIADOR DE EVENTOS UNIFECAF')
-    titulo('Escolha um Perfil Para Acessar o Sistema')
+    titulo('Escolha o Perfil para Acessar o Sistema')
     while True:
-        perfil_user = input('1 - Aluno \n2 - Coordenador \nAcessar como: ').strip()
+        print(PERFIL_USER)
+        perfil_user = input('Acessar como: ').strip()
 
         if perfil_user in ['1', '2']:
             exibir_menu(perfil_user)
+            break
+        elif perfil_user == '0':
+            print('Saindo do sistema...')
             break
         else: 
             print('\n[ERRO] Escolha apenas uma das opções existentes. \nTente novamente.\n')
@@ -51,11 +60,11 @@ def menu_aluno(operacao=None):
 
         match operacao:
             case '1':
-                print('Visualizar eventos disponíveis.')
+                exibe_eventos_disponiveis()
             case '2':
-                print('Inscrever-se em Eventos.')
+                inscricao_evento()
             case '0':
-                print('Saindo do sistema...')
+                main()
                 break
             case _:
                 print('Operação Inválida')
@@ -74,17 +83,16 @@ def menu_coordenador(operacao=None):
             case '2':
                 atualiza_evento()
             case '3':
-                print('Visualizar Evento.')
+                print('Visualizar Inscrições')
             case '4':
                 print('Excluir Evento.')
             case '0':
-                print('Saindo do sistema...')
+                # print('Saindo do sistema...')
+                main()
                 break
             case _: 
                 print('Operação Inválida')
         operacao = None
-
-# FIM MENU
 
 def cadastra_evento():
     titulo('CADASTRAR EVENTO')
@@ -121,8 +129,8 @@ def cadastra_evento():
             'descricao': descricao,
             'data': f'{dia}/{mes}/{ano}',
             'quantidade_maxima_participantes': quantidade_participantes,
-            'inscritos': None,
-            'vagas_diponiveis': None,
+            'inscritos': 0,
+            'vagas_diponiveis': quantidade_participantes,
             'lista_inscritos': []
         }
         eventos.append(novo_evento)
@@ -153,7 +161,6 @@ def atualiza_evento():
                 novo_mes = int(input('Mês: '))
                 novo_ano = int(input('Ano: '))
                 nova_quantidade_participantes = int(input('Quantidade de Participantes: '))
-                inscritos = int(input('Quantidade de inscritos: '))
 
                 if novo_dia <= 0 or novo_mes <= 0 or novo_ano <= 0:
                     exibir_erro('Dia, mês e ano devem ser maior que ZERO!')
@@ -172,7 +179,57 @@ def atualiza_evento():
         if not confirma_acao('Atualizar outro evento?'):
             break
 
+def exibe_eventos_disponiveis():
+    titulo('EVENTOS DISPONÍVEIS')
+    for evento in eventos:
+        print(f'EVENTO: {evento['nome_evento']} | INSCRITOS: {evento['inscritos']} | VAGAS: {evento['vagas_diponiveis']}')
+        print(f'DATA: {evento['data']}')
+        print(f'DESCRIÇÃO: {evento['descricao']}')
+        print('-=' * 26)
+    aguarda_enter()
     
+def inscricao_evento():
+    titulo('INSCRIÇÃO EVENTO')
+    # exibe_eventos_disponiveis()
+    print('Preencha os campos abaixo para efetuar a inscrição.\n')
+
+    while True:
+        nome_evento_inscricao = input('Informe o nome do Evento: ').strip().title()
+        evento_encontrado = None
+
+        if nome_evento_inscricao == '':
+            exibir_erro('Preencha o nome do evento corretamente!')
+            continue
+        for evento in eventos:
+            if evento['nome_evento'] == nome_evento_inscricao:
+                evento_encontrado = evento
+                break     
+        if not evento_encontrado:
+            exibir_erro('O evento informado não foi entrado.\nCertifique-se de informar o nome corretamente, por favor!')
+            continue
+        if evento_encontrado['vagas_diponiveis'] == 0:
+            print('Ops! Não há mais vagas disponíveis! \nMas não desanime, explore outros eventos!')
+            break
+        while True:
+            nome_inscrito = input('Nome completo: ').strip().title()
+
+            if nome_inscrito == '':
+                exibir_erro('Preencha o seu nome corretamente!')
+                continue
+            else:
+                break
+        while True:
+            if confirma_acao('Confirmar inscrição? '):
+                evento_encontrado['vagas_diponiveis'] -= 1
+                evento_encontrado['inscritos'] += 1
+                print(f'Inscrição no evendo {evento_encontrado['nome_evento']} confirmado com secesso!')
+                break
+            else:
+                print('Inscrição cancelada!')
+                break
+        if not confirma_acao('Deseja se inscrever em outro eventos? '):
+            break
+                  
 def titulo(titulo):
     print('--'*26)
     print(f'|{(titulo):^50}|')
@@ -187,6 +244,14 @@ def confirma_acao(pergunta):
         if resposta in ['S', 'N']:
             return resposta == 'S'
         exibir_erro('Escolha apenas [S] ou [N] para prosseguir.')
+    
+def aguarda_enter():
+    while True:
+        resposta = input('Pressione Enter para voltar ao Menu.').strip()
+        if resposta == '':
+            break
+        else: 
+            exibir_erro('Não digite nada, apenas pressione Enter.')
 
 # Execução do programa
 main()
