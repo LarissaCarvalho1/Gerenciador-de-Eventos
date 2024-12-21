@@ -1,12 +1,27 @@
 # Base de dados
-eventos = [{'nome_evento': 'Evento', 
-    'descricao': 'Teste testado testando testamento', 
-    'data': '20/12/2024',
-    'quantidade_maxima_participantes': 50, 
-    'inscritos': 49,
-    'vagas_diponiveis': 1,
-    'lista_inscritos': ['Amanda Ribeiro Silva', 'Lucas Almeida Costa', 'Mariana Oliveira Souza', 'Gabriel Santos Lima', 'Sofia Pereira Carvalho', 'Rafael Gonçalves Machado', 'Isabela Araújo Fernandes', 'Matheus Martins Rocha', 'Giovanna Mendes Santos', 'João Victor Oliveira Nascimento','Larissa Ferreira Andrade', 'Thiago Costa Ribeiro', 'Ana Clara Figueiredo Lopes', 'Pedro Henrique Alves Fonseca', 'Camila Rocha Menezes', 'Felipe Almeida Cardoso', 'Júlia Martins Albuquerque', 'Guilherme Barbosa Teixeira', 'Beatriz Vieira Monteiro', 'Leonardo Silva Oliveira', 'Carolina Ferreira Matos', 'Vinícius Andrade Cunha', 'Helena Lima Bastos', 'Eduardo Souza Martins', 'Yasmin Castro Moreira', 'Rodrigo Carvalho Santana', 'Bianca Oliveira Campos', 'Diego Monteiro Freitas', 'Manuela Mendes Pires', 'Bruno Rocha Cavalcante']
+eventos = [
+    {
+        'nome_evento': 'Workshop Agile Methods', 
+        'descricao': 'Participe do Workshop Hands-On: Métodos Ágeis e mergulhe na prática das principais ferramentas\ne frameworks ágeis, como Scrum e Kanban!Por meio de atividades interativas e exercícios práticos,\nvocê terá a oportunidade de vivenciar a aplicação dos métodos ágeis em situações reais,\naprimorando sua capacidade de adaptação e entrega de valor contínuo.', 
+        'data': '18/01/2025',
+        'quantidade_maxima_participantes': 50, 
+        'inscritos': 10,
+        'vagas_disponiveis': 40,
+        'lista_inscritos': ['Amanda Ribeiro Silva', 'Lucas Almeida Costa', 'Mariana Oliveira Souza', 'Gabriel Santos Lima', 'Sofia Pereira Carvalho', 'Rafael Gonçalves Machado', 'Isabela Araújo Fernandes', 'Matheus Martins Rocha', 'Giovanna Mendes Santos', 'João Victor Oliveira Nascimento'], 
+        'status': True
+    }, 
+    {
+        'nome_evento': 'Palestra Diversidade E Inclusão',
+        'descricao': 'Descubra como a diversidade e a inclusão transformam realidades e fortalecem equipes. \nAbordaremos a importância da equidade, respeito às diferenças e combate ao preconceito, \npromovendo reflexões e ações para construir um futuro mais justo e acolhedor.\nParticipe e inspire-se para fazer a diferença!',
+        'data': '25/01/2025',
+        'quantidade_maxima_participantes': 150,
+        'inscritos': 20,
+        'vagas_disponiveis': 130,
+        'lista_inscritos': ['Larissa Ferreira Andrade', 'Thiago Costa Ribeiro', 'Ana Clara Figueiredo Lopes', 'Pedro Henrique Alves Fonseca', 'Camila Rocha Menezes', 'Felipe Almeida Cardoso', 'Júlia Martins Albuquerque','Guilherme Barbosa Teixeira', 'Beatriz Vieira Monteiro', 
+        'Leonardo Silva Oliveira', 'Carolina Ferreira Matos', 'Vinícius Andrade Cunha', 'Helena Lima Bastos', 'Eduardo Souza Martins', 'Yasmin Castro Moreira', 'Rodrigo Carvalho Santana', 'Bianca Oliveira Campos', 'Diego Monteiro Freitas', 'Manuela Mendes Pires', 'Bruno Rocha Cavalcante'],
+        'status': True
     }]
+evento_ativo = True
 
 MENU_ALUNO = """
 1 - Visualizar Eventos Disponíveis.
@@ -83,11 +98,10 @@ def menu_coordenador(operacao=None):
             case '2':
                 atualiza_evento()
             case '3':
-                print('Visualizar Inscrições')
+                visualiza_inscricoes()
             case '4':
-                print('Excluir Evento.')
+                cancela_exclui_evento()
             case '0':
-                # print('Saindo do sistema...')
                 main()
                 break
             case _: 
@@ -126,15 +140,17 @@ def cadastra_evento():
                 break
         novo_evento = {
             'nome_evento': nome,
-            'descricao': descricao,
+            'descricao': f'\n{descricao}\n',
             'data': f'{dia}/{mes}/{ano}',
             'quantidade_maxima_participantes': quantidade_participantes,
             'inscritos': 0,
-            'vagas_diponiveis': quantidade_participantes,
-            'lista_inscritos': []
+            'vagas_disponiveis': quantidade_participantes,
+            'lista_inscritos': [],
+            'status': evento_ativo
         }
         eventos.append(novo_evento)
         print(f'\nEvento cadastrado com sucesso!')
+        # print(eventos)
     
         if not confirma_acao('Cadastrar outro evento?'):
             break
@@ -182,9 +198,9 @@ def atualiza_evento():
 def exibe_eventos_disponiveis():
     titulo('EVENTOS DISPONÍVEIS')
     for evento in eventos:
-        print(f'EVENTO: {evento['nome_evento']} | INSCRITOS: {evento['inscritos']} | VAGAS: {evento['vagas_diponiveis']}')
+        print(f'EVENTO: {evento['nome_evento']} | INSCRITOS: {evento['inscritos']} | VAGAS: {evento['vagas_disponiveis']}')
         print(f'DATA: {evento['data']}')
-        print(f'DESCRIÇÃO: {evento['descricao']}')
+        print(f'\nDESCRIÇÃO: {evento['descricao']}\n')
         print('-=' * 26)
     aguarda_enter()
     
@@ -207,7 +223,7 @@ def inscricao_evento():
         if not evento_encontrado:
             exibir_erro('O evento informado não foi entrado.\nCertifique-se de informar o nome corretamente, por favor!')
             continue
-        if evento_encontrado['vagas_diponiveis'] == 0:
+        if evento_encontrado['vagas_disponiveis'] == 0:
             print('Ops! Não há mais vagas disponíveis! \nMas não desanime, explore outros eventos!')
             break
         while True:
@@ -220,9 +236,10 @@ def inscricao_evento():
                 break
         while True:
             if confirma_acao('Confirmar inscrição? '):
-                evento_encontrado['vagas_diponiveis'] -= 1
+                evento_encontrado['vagas_disponiveis'] -= 1
                 evento_encontrado['inscritos'] += 1
-                print(f'Inscrição no evendo {evento_encontrado['nome_evento']} confirmado com secesso!')
+                evento_encontrado['lista_inscritos'].append(nome_inscrito)
+                print(f'Inscrição no evendo {evento_encontrado['nome_evento']} confirmada com secesso!')
                 break
             else:
                 print('Inscrição cancelada!')
@@ -230,6 +247,68 @@ def inscricao_evento():
         if not confirma_acao('Deseja se inscrever em outro eventos? '):
             break
                   
+def visualiza_inscricoes():
+    titulo('VIZUALIZAR LISTA DE INSCRITOS')
+    print('Escolha um evento para visualizar a lista de inscritos')
+    print('Eventos Disponíveis: ')
+
+    for indice, evento in enumerate(eventos):
+        print(f'{indice + 1} - {evento['nome_evento']}')
+
+    while True:
+        try:
+            indice_evento = int(input('Digite o número do evento que deseja acessar: ')) - 1
+        except (ValueError, TypeError):
+            exibir_erro('Por favor, informe apenas números!')
+            continue
+        else:
+            # Valida se o indice indicado pelo usuário está dentro do intervalo [0, len(eventos) - 1]
+            if 0 <= (indice_evento) < len(eventos):
+                evento_escolhido = eventos[indice_evento]
+                
+                if not evento_escolhido['lista_inscritos']:
+                    print(f'Ainda não há inscritos no evento {evento_escolhido['nome_evento']}!')
+                    break
+                else:
+                    print(f'\nLista de inscritos no evento: {evento['nome_evento']}\n')
+                    for inscrito in evento_escolhido['lista_inscritos']:
+                        print(inscrito)
+            else:
+                exibir_erro('Não há um evento com esse número. Tente novamente!')
+                continue
+
+        if confirma_acao('Consultar a lista de outro evento?'):
+            continue
+        else:
+            break
+
+def cancela_exclui_evento():
+    titulo('CANCELAR E EXCLUIR EVENTOS')
+    while True:
+        for indice, evento in enumerate(eventos):
+            print(f'{indice + 1} - {evento['nome_evento']}')
+            
+        try:
+            indice_evento = int(input('Informe o número do evento para cancelamento: ')) - 1
+        except (ValueError, TypeError):
+            exibir_erro('Por favor, informe apenas números!')
+            continue
+        else:
+            # Valida se o indice indicado pelo usuário está dentro do intervalo [0, len(eventos) - 1]
+            if 0 <= (indice_evento) < len(eventos):
+                evento_escolhido = eventos[indice_evento]
+
+                if confirma_acao('Deseja mesmo cancelar?'):
+                    evento_ativo = False
+                    evento_escolhido['status'] = evento_ativo
+                    eventos.remove(evento_escolhido)
+                    print(f'\nEvento {evento_escolhido['nome_evento']} CANCELADO e EXCLUÍDO com Sucesso!\n')
+            else:
+                exibir_erro('Não há um evento com esse número. Tente novamente!')
+                continue
+        if not confirma_acao('Cancelar e excluir outro evento?'):
+            break
+
 def titulo(titulo):
     print('--'*26)
     print(f'|{(titulo):^50}|')
@@ -240,7 +319,7 @@ def exibir_erro(mensagem):
     
 def confirma_acao(pergunta):
     while True:
-        resposta = input(f'{pergunta} [S/N] ').strip().upper()
+        resposta = input(f'\n{pergunta} [S/N] ').strip().upper()
         if resposta in ['S', 'N']:
             return resposta == 'S'
         exibir_erro('Escolha apenas [S] ou [N] para prosseguir.')
@@ -255,5 +334,3 @@ def aguarda_enter():
 
 # Execução do programa
 main()
-
-
