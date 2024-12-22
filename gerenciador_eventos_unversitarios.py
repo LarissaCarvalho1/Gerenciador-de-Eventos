@@ -21,8 +21,14 @@ eventos = [
         'Leonardo Silva Oliveira', 'Carolina Ferreira Matos', 'Vinícius Andrade Cunha', 'Helena Lima Bastos', 'Eduardo Souza Martins', 'Yasmin Castro Moreira', 'Rodrigo Carvalho Santana', 'Bianca Oliveira Campos', 'Diego Monteiro Freitas', 'Manuela Mendes Pires', 'Bruno Rocha Cavalcante'],
         'status': True
     }]
+eventos_cancelados = []
 evento_ativo = True
 
+PERFIL_USER = """
+1 - Aluno
+2 - Coordenador
+0 - Sair do Sistema
+"""
 MENU_ALUNO = """
 1 - Visualizar Eventos Disponíveis.
 2 - Inscrever-se em Eventos.
@@ -32,19 +38,15 @@ MENU_COORDENADOR = """
 1 - Cadastrar Evento. 
 2 - Atualizar Evento.
 3 - Visualizar Inscrições.
-4 - Excluir Evento.
+4 - Cancelar Evento.
+5 - Excluir Evento.
 0 - Acessar Perfis
-"""
-PERFIL_USER = """
-1 - Aluno
-2 - Coordenador
-0 - Sair do Sistema
 """
 
 # Ponto de entrada no sistema
 def main():
     titulo('GERENCIADOR DE EVENTOS UNIFECAF')
-    titulo('Escolha o Perfil para Acessar o Sistema')
+    subtitulo('Escolha um perfil para acessar o sistema')
     while True:
         print(PERFIL_USER)
         perfil_user = input('Acessar como: ').strip()
@@ -71,7 +73,7 @@ def menu_aluno(operacao=None):
         if operacao is None:
             titulo('MENU ALUNO')
             print(MENU_ALUNO)
-            operacao = input('Escolha uma das opções acima para prosseguir: ').strip()
+            operacao = input('Escolha uma opção para prosseguir: ').strip()
 
         match operacao:
             case '1':
@@ -90,7 +92,7 @@ def menu_coordenador(operacao=None):
         if operacao is None:
             titulo('MENU COORDENADOR')
             print(MENU_COORDENADOR)
-            operacao = input('Escolha uma das opções acima para prosseguir: ').strip()
+            operacao = input('Escolha uma opção para prosseguir: ').strip()
 
         match operacao:
             case '1':
@@ -100,7 +102,9 @@ def menu_coordenador(operacao=None):
             case '3':
                 visualiza_inscricoes()
             case '4':
-                cancela_exclui_evento()
+                cancela_evento()
+            case '5':
+                exclui_evento()
             case '0':
                 main()
                 break
@@ -201,16 +205,19 @@ def exibe_eventos_disponiveis():
         print(f'EVENTO: {evento['nome_evento']} | INSCRITOS: {evento['inscritos']} | VAGAS: {evento['vagas_disponiveis']}')
         print(f'DATA: {evento['data']}')
         print(f'\nDESCRIÇÃO: {evento['descricao']}\n')
-        print('-=' * 26)
+        print('--' * 50)
     aguarda_enter()
     
 def inscricao_evento():
     titulo('INSCRIÇÃO EVENTO')
-    # exibe_eventos_disponiveis()
-    print('Preencha os campos abaixo para efetuar a inscrição.\n')
+    subtitulo('Preencha os campos abaixo para efetuar a inscrição.')
+    print(f'\n{("Eventos Disponíveis"):^50}\n')
+
+    for indice, evento in enumerate(eventos):
+        print(f'{indice + 1}° - {evento['nome_evento']}')
 
     while True:
-        nome_evento_inscricao = input('Informe o nome do Evento: ').strip().title()
+        nome_evento_inscricao = input('\nInforme o nome do Evento: ').strip().title()
         evento_encontrado = None
 
         if nome_evento_inscricao == '':
@@ -239,10 +246,10 @@ def inscricao_evento():
                 evento_encontrado['vagas_disponiveis'] -= 1
                 evento_encontrado['inscritos'] += 1
                 evento_encontrado['lista_inscritos'].append(nome_inscrito)
-                print(f'Inscrição no evendo {evento_encontrado['nome_evento']} confirmada com secesso!')
+                print(f'\nInscrição no evendo {evento_encontrado['nome_evento']} confirmada com secesso!')
                 break
             else:
-                print('Inscrição cancelada!')
+                print('\nInscrição cancelada!')
                 break
         if not confirma_acao('Deseja se inscrever em outro eventos? '):
             break
@@ -282,37 +289,72 @@ def visualiza_inscricoes():
         else:
             break
 
-def cancela_exclui_evento():
-    titulo('CANCELAR E EXCLUIR EVENTOS')
+def cancela_evento():
+    titulo('CANCELAR EVENTO')
     while True:
         for indice, evento in enumerate(eventos):
             print(f'{indice + 1} - {evento['nome_evento']}')
-            
+
         try:
             indice_evento = int(input('Informe o número do evento para cancelamento: ')) - 1
-        except (ValueError, TypeError):
+        except(ValueError, TypeError):
             exibir_erro('Por favor, informe apenas números!')
             continue
         else:
-            # Valida se o indice indicado pelo usuário está dentro do intervalo [0, len(eventos) - 1]
-            if 0 <= (indice_evento) < len(eventos):
+            if 0 <= indice_evento < len(eventos):
                 evento_escolhido = eventos[indice_evento]
 
-                if confirma_acao('Deseja mesmo cancelar?'):
+                if confirma_acao('Deseja mesmo cancelar? '):
                     evento_ativo = False
                     evento_escolhido['status'] = evento_ativo
+                    eventos_cancelados.append(evento_escolhido)
                     eventos.remove(evento_escolhido)
-                    print(f'\nEvento {evento_escolhido['nome_evento']} CANCELADO e EXCLUÍDO com Sucesso!\n')
+                    print('Evento cancelado com sucesso!')
             else:
                 exibir_erro('Não há um evento com esse número. Tente novamente!')
                 continue
-        if not confirma_acao('Cancelar e excluir outro evento?'):
+        if not confirma_acao('Cancelar outro evento? '):
+            break
+
+def exclui_evento():
+    titulo('EXCLUIR EVENTO')
+
+    if not eventos_cancelados:
+        print('Não há eventos cancelados aguardando exclusão!')
+        print('Caso deseje excluir um evento, utilize a opção CANCELAR EVENTO\n e depois acesse EXCLUIR EVENTO.')
+        return
+    
+    for indice, evento_cancelado in enumerate(eventos_cancelados):
+        print(f'{indice + 1} - {evento_cancelado['nome_evento']}')
+    
+    while True:
+        try:
+            indice_evento_cancelado = int('Informe o número do evento para excluí-lo: ') - 1
+        except(ValueError, TypeError):
+            exibir_erro('Por favor, informe apenas números!')
+        else:
+            if 0 <= indice_evento_cancelado < len(eventos_cancelados):
+                evento_cancelado_escolhido = eventos_cancelados[indice_evento_cancelado]
+
+                if confirma_acao('Deseja mesmo excluir? '):
+                    eventos_cancelados.remove(evento_cancelado_escolhido)
+                    print('Evento excluído com sucesso!')
+                    print(eventos_cancelados)
+                else:
+                    print('Evento NÃO excluído.')
+            else:
+                exibir_erro('Não há um evento com esse número. Tente novamente!')
+                continue
+        if not confirma_acao('Deseja excluir outro evento?'):
             break
 
 def titulo(titulo):
     print('--'*26)
-    print(f'|{(titulo):^50}|')
+    print(f'{(titulo):^50}')
     print('--'*26)
+
+def subtitulo(subtitulo):
+    print(f'{(subtitulo):^50}')
 
 def exibir_erro(mensagem):
     print(f'\n{mensagem}\n')

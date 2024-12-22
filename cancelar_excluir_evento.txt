@@ -1,0 +1,26 @@
+# def cancela_exclui_evento():
+#     titulo('CANCELAR E EXCLUIR EVENTOS')
+#     while True:
+#         for indice, evento in enumerate(eventos):
+#             print(f'{indice + 1} - {evento['nome_evento']}')
+            
+#         try:
+#             indice_evento = int(input('Informe o número do evento para cancelamento: ')) - 1
+#         except (ValueError, TypeError):
+#             exibir_erro('Por favor, informe apenas números!')
+#             continue
+#         else:
+#             # Valida se o indice indicado pelo usuário está dentro do intervalo [0, len(eventos) - 1]
+#             if 0 <= (indice_evento) < len(eventos):
+#                 evento_escolhido = eventos[indice_evento]
+
+#                 if confirma_acao('Deseja mesmo cancelar?'):
+#                     evento_ativo = False
+#                     evento_escolhido['status'] = evento_ativo
+#                     eventos.remove(evento_escolhido)
+#                     print(f'\nEvento {evento_escolhido['nome_evento']} CANCELADO e EXCLUÍDO com Sucesso!\n')
+#             else:
+#                 exibir_erro('Não há um evento com esse número. Tente novamente!')
+#                 continue
+#         if not confirma_acao('Cancelar e excluir outro evento?'):
+#             break
