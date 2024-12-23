@@ -68,23 +68,29 @@ def aguarda_enter():
         else: 
             print('\nNão digite nada, apenas pressione Enter.\n')
 
+def pausa():
+    sleep(1)
+
 # Ponto de entrada no sistema
 def main():
     titulo('GERENCIADOR DE EVENTOS UNIFECAF')
-    subtitulo('Escolha um perfil para acessar o sistema')
 
     while True:
+        subtitulo('Escolha um perfil para acessar o sistema')
         print(PERFIL_USER)
         perfil_user = input('Acessar como: ').strip()
 
         if perfil_user in ['1', '2']:
+            pausa()
             exibir_menu(perfil_user)
             break
         elif perfil_user == '0':
-            print('Saindo do sistema...')
+            print('\nSaindo do sistema...\n')
+            pausa()
             break
         else: 
-            print('\n[ERRO] Escolha apenas uma das opções existentes. \nTente novamente.\n')
+            print('\nEscolha apenas uma das opções existentes. \nTente novamente.\n')
+            pausa()
             continue
 
 # Exibe o menu baseado no tipo de usuário
@@ -147,17 +153,20 @@ def cadastra_evento():
         nome = input('Nome do Evento: ').strip().title()
         if nome == '':
             print('\nPreencha o nome corretamente!\n')
+            pausa()
             continue
 
         for evento in eventos:
             if evento['nome_evento'] == nome:
                 print('\nEvento já cadastrardo!\nUtilize a opção EDITAR EVENTO.\n')
+                pausa()
                 return
 
         while True:
             descricao = input('Descrição: ').strip().capitalize()
             if descricao == '':
                 print('\nPreencha a descrição corretamente!\n')
+                pausa()
                 continue
             else:
                 break
@@ -174,16 +183,18 @@ def cadastra_evento():
                 quantidade_participantes = int(input('Quantidade de Participantes: '))
                 if quantidade_participantes <= 0:
                     print('\nQuantidade de participantes deve ser maior que ZERO!\n')
+                    pausa()
                     continue
             except (ValueError, TypeError):
                 print('\nInforme apenas números válidos!')
+                pausa()
                 continue
             else:
                 break
 
         novo_evento = {
             'nome_evento': nome,
-            'descricao': f'\n{descricao}\n',
+            'descricao': descricao,
             'data': data.strftime('%d/%m/%Y'),
             'quantidade_maxima_participantes': quantidade_participantes,
             'inscritos': 0,
@@ -192,16 +203,20 @@ def cadastra_evento():
         }
         eventos.append(novo_evento)
         print(f'\nEvento cadastrado com sucesso!')
+        pausa()
     
         if not confirma_acao('Cadastrar outro evento?'):
+            pausa()
             break
 
 def atualiza_evento():
     while True:
         if not eventos: 
             print('\nNão há eventos disponíveis para atualização!\nUtilize a opção CADASTRAR EVENTO.')
+            pausa()
             return
         
+        print(f'\n{("Eventos Disponíveis"):^50}\n')
         for indice, evento in enumerate(eventos):
             print(f'{indice + 1} - {evento["nome_evento"]}')   
 
@@ -213,9 +228,11 @@ def atualiza_evento():
                 # break
             else:
                 print('\nNão há um evento com esse número. Tente novamente!\n')
+                pausa()
                 continue
         except (ValueError, TypeError):
             print('\nPor favor, informe apenas números!\n')
+            pausa()
             continue
         
         while True:
@@ -230,23 +247,29 @@ def atualiza_evento():
                 nova_quantidade_participantes = int(input('Quantidade de Participantes: '))
                 if nova_quantidade_participantes <= 0:
                     print('Quantidade de participantes deve ser maior que ZERO!')
+                    pausa()
                     continue
             except (ValueError, TypeError):
                 print('\nInforme apenas números válidos!\n')
+                pausa()
                 continue
             else:
                 evento_escolhido['data'] = nova_data.strftime('%d/%m/%Y')
                 evento_escolhido['quantidade_maxima_participantes'] = nova_quantidade_participantes
+                evento_escolhido['vagas_disponiveis'] = nova_quantidade_participantes - evento_escolhido['inscritos']
                 print('\nEvento atualizado com sucesso!')
+                pausa()
                 break
             
         if not confirma_acao('Atualizar outro evento?'):
+            pausa()
             break
                 
 def exibe_eventos_disponiveis():
     titulo('EVENTOS DISPONÍVEIS')
     if not eventos:
         print('\nNão há eventos disponíveis para visualização!\n')
+        pausa()
         return
 
     for evento in eventos:
@@ -309,7 +332,7 @@ def inscricao_evento():
                 print('\nInscrição cancelada!')
                 break
 
-        if not confirma_acao('Deseja inscrever-se em outro evento? '):
+        if not confirma_acao('Inscrever-se em outro evento?'):
             break
                   
 def visualiza_inscricoes():
@@ -333,7 +356,7 @@ def visualiza_inscricoes():
                 evento_escolhido = eventos[indice_evento]
                 
                 if not evento_escolhido['lista_inscritos']:
-                    print(f"Ainda não há inscritos no evento {evento_escolhido['nome_evento']}!")
+                    print(f"\nAinda não há inscritos no evento {evento_escolhido['nome_evento']}!")
                     break
                 else:
                     print(f"\nLista de inscritos no evento: {evento_escolhido['nome_evento']}\n")
@@ -413,7 +436,7 @@ def exclui_evento():
             print('\nPor favor, informe apenas números!')
             continue
             
-        if not confirma_acao('Deseja excluir outro evento?'):
+        if not confirma_acao('Excluir outro evento?'):
             break
 
 main()
