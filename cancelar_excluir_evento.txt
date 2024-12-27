@@ -24,3 +24,23 @@
 #                 continue
 #         if not confirma_acao('Cancelar e excluir outro evento?'):
 #             break
+
+{
+        'nome_evento': 'Workshop Agile Methods', 
+        'descricao': 'Participe do Workshop Hands-On: Métodos Ágeis e mergulhe na prática das principais ferramentas\ne frameworks ágeis, como Scrum e Kanban!Por meio de atividades interativas e exercícios práticos,\nvocê terá a oportunidade de vivenciar a aplicação dos métodos ágeis em situações reais,\naprimorando sua capacidade de adaptação e entrega de valor contínuo.', 
+        'data': '18/01/2025',
+        'quantidade_maxima_participantes': 50, 
+        'inscritos': 10,
+        'vagas_disponiveis': 40,
+        'lista_inscritos': ['Amanda Ribeiro Silva', 'Lucas Almeida Costa', 'Mariana Oliveira Souza', 'Gabriel Santos Lima', 'Sofia Pereira Carvalho', 'Rafael Gonçalves Machado', 'Isabela Araújo Fernandes', 'Matheus Martins Rocha', 'Giovanna Mendes Santos', 'João Victor Oliveira Nascimento'], 
+    }, 
+    {
+        'nome_evento': 'Palestra Diversidade E Inclusão',
+        'descricao': 'Descubra como a diversidade e a inclusão transformam realidades e fortalecem equipes. \nAbordaremos a importância da equidade, respeito às diferenças e combate ao preconceito, \npromovendo reflexões e ações para construir um futuro mais justo e acolhedor.\nParticipe e inspire-se para fazer a diferença!',
+        'data': '25/01/2025',
+        'quantidade_maxima_participantes': 150,
+        'inscritos': 20,
+        'vagas_disponiveis': 130,
+        'lista_inscritos': ['Larissa Ferreira Andrade', 'Thiago Costa Ribeiro', 'Ana Clara Figueiredo Lopes', 'Pedro Henrique Alves Fonseca', 'Camila Rocha Menezes', 'Felipe Almeida Cardoso', 'Júlia Martins Albuquerque','Guilherme Barbosa Teixeira', 'Beatriz Vieira Monteiro', 
+        'Leonardo Silva Oliveira', 'Carolina Ferreira Matos', 'Vinícius Andrade Cunha', 'Helena Lima Bastos', 'Eduardo Souza Martins', 'Yasmin Castro Moreira', 'Rodrigo Carvalho Santana', 'Bianca Oliveira Campos', 'Diego Monteiro Freitas', 'Manuela Mendes Pires', 'Bruno Rocha Cavalcante'],
+    }
