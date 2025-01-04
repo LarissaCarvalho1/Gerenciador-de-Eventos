@@ -261,7 +261,6 @@ def exibe_eventos_disponiveis():
     aguarda_enter()
     pausa()
     
-    
 def inscricao_evento():
     titulo('INSCRIÇÃO EVENTO')
     
