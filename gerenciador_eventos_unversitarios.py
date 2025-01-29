@@ -24,6 +24,8 @@ MENU_COORDENADOR = """
 6 - Excluir Evento
 0 - Acessar Perfis
 """
+
+# Funções para uso geral
 def titulo(titulo):
     print('--'*26)
     print(f'{(titulo):^50}')
@@ -51,6 +53,7 @@ def aguarda_enter():
 
 def pausa():
     sleep(1)
+##
 
 # Ponto de entrada no sistema
 def main():
@@ -81,6 +84,7 @@ def exibir_menu(usuario):
     elif usuario == '2':
         menu_coordenador()
 
+# Exibe serviços disponíveis para usuário 'aluno'
 def menu_aluno(operacao=None):
     while True:
         if operacao is None:
@@ -101,6 +105,7 @@ def menu_aluno(operacao=None):
                 sleep(1)
         operacao = None
 
+# Exibe serviços disponíveis para usuário 'coordenador'
 def menu_coordenador(operacao=None):
     while True:
         if operacao is None:
@@ -128,6 +133,7 @@ def menu_coordenador(operacao=None):
                 print('\nOperação Inválida! Tente novamente.\n')
         operacao = None
 
+# Cadastra eventos
 def cadastra_evento():
     titulo('CADASTRAR EVENTO')
     while True:
@@ -190,6 +196,7 @@ def cadastra_evento():
             pausa()
             break
 
+# Atualiza eventos cadastrados
 def atualiza_evento():
     titulo('ATUALIZAR EVENTO')
     while True:
@@ -245,7 +252,8 @@ def atualiza_evento():
         if not confirma_acao('Atualizar outro evento?'):
             pausa()
             break
-                
+
+# Exibe eventos disponíveis                
 def exibe_eventos_disponiveis():
     titulo('EVENTOS DISPONÍVEIS')
     if not eventos:
@@ -260,7 +268,8 @@ def exibe_eventos_disponiveis():
         print('--' * 26)
     aguarda_enter()
     pausa()
-   
+
+# Permite a inscrição em eventos cadastrados   
 def inscricao_evento():
     titulo('INSCRIÇÃO EVENTO')
     
@@ -324,6 +333,7 @@ def inscricao_evento():
             pausa()
             break
                   
+# Exibe a lista de inscritos por evento                  
 def visualiza_inscricoes():
     titulo('VIZUALIZAR LISTA DE INSCRITOS')
 
@@ -369,6 +379,7 @@ def visualiza_inscricoes():
             pausa()
             break
 
+# Cancela eventos
 def cancela_evento():
     titulo('CANCELAR EVENTO')
 
@@ -405,6 +416,7 @@ def cancela_evento():
             pausa()
             break
 
+# Exclui eventos cancelados
 def exclui_evento():
     titulo('EXCLUIR EVENTO')
 
