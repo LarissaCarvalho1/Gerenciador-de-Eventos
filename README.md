@@ -1,5 +1,4 @@
 # 🖥🎓 Gerenciador de eventos universitários UniFECAF 
-![Gerenciamento](imagem2.jpg)
 
 O sistema de gerenciamento de eventos da universidade FECAF é uma solução desenvolvida, durante a disciplina de Computational Logic Using Python, para facilitar a administração e participação em eventos promovidos pela instituição.  
 
