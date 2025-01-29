@@ -31,3 +31,5 @@ coordenadores.
 - Coordenadores: possuem acesso a ferramentas de criação, edição,
 cancelamento e exclusão de eventos, além de poderem visualizar as inscrições
 realizadas.
+
+#### 🎞 Assista ao vídeo de [apresentação](https://youtu.be/pgi9IKyif8Q?si=vLrYbSjrll-geGCv)
